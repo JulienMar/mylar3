@@ -2,11 +2,7 @@
 	import mylar
 %>
 <!doctype html>
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<html lang="en" class="no-js">
 <head>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -18,56 +14,84 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
 	<link rel="apple-touch-icon" href="images/mylarlogo.png" />
-        <link rel="stylesheet" type="text/css" href="interfaces/${interface}/css/style.css?v=${mylar.CURRENT_VERSION}" />
-	<link rel="stylesheet" href="interfaces/${interface}/css/jquery-ui.css">
+    <!--<link rel="stylesheet" type="text/css" href="interfaces/${interface}/css/style.css?v=${mylar.CURRENT_VERSION}" />-->
+	<!--<link rel="stylesheet" href="interfaces/${interface}/css/jquery-ui.css">-->
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 	${next.headIncludes()}
 	
 	<script src="js/libs/modernizr-2.8.3.min.js"></script>
 	<script src="js/libs/jquery-1.7.2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script type = "text/javascript" src="../../js/base.js"></script>
 </head>
 <body>
         <%
              mylar.DONATEBUTTON = True
         %>
-         	<div id="container">
-                <div id="ajaxMsg" class="ajaxMsg"></div>
-                <div id="updatediv"></div>
+
 		<header>			
-			<div class="wrapper">
-			<div id="logo">
-				<a href="home"><img class="mylarload" src="images/mylarlogo.png" alt="mylar" style=""></a>
-			</div>
-			<ul id="nav">
-				<li>
-                                %if mylar.WANTED_TAB_OFF:
-                                    <a href="#">wanted</a>
-                                %else:
-                                    <a href="upcoming">wanted</a>
-                                %endif
-                                </li>
-				<li><a href="pullist">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="home">
+                        <img src="images/mylarlogo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                        Mylar 
+                    </a>
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notificationModal">
+                        <i class="bi bi-bell-fill"></i>
+                    </a>
+                    <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Notifications</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="navbar-nav mx-auto">
+                            <form class="d-flex" role="search" action="searchit" method="get">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="name">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            </form>
+                            %if mylar.WANTED_TAB_OFF:
+                                <a class="nav-link" href="home">Wanted</a>
+                            %else:
+                                <a class="nav-link" href="upcoming">Wanted</a>
+                            %endif
+                            <a class="nav-link" href="pullist">
                                 %if mylar.PULLNEW == 'no':
-                                  <img src="images/grey-circle.png" height="10" width="10" />
+                                    <i class="bi bi-circle-fill" style="color:grey"></i>
                                 %else:
-                                  <img src="images/green-circle.png" height="10" width="10" />
+                                    <i class="bi bi-circle-fill" style="color:green"></i>
                                 %endif
-                                 &nbspThis Week</a></li>
-				<li><a href="manage">Manage</a></li>
-				<li><a href="storyarc_main">StoryArcs</a></li>
-				<li><a href="history">History</a></li>
-				<li><a href="config" class="config"><img src="${icons['icon_gear']}" alt="settings"/></a></li>
-			</ul>
-			<div id="searchbar">
-                <form action="searchit" method="get">
-                    <input type="text" value="" placeholder="Search" onfocus="if(this.value==this.defaultValue) this.value='';" name="name"/>
-                    <span class="mini-icon"></span>
-                    <input type="submit" value="Search" onclick="flippylogo();"/>
-                </form>
-            </div>
-           
-			</div>
+                                This week
+                            </a>
+                            <a class="nav-link" href="manage">Manage</a>
+                            <a class="nav-link" href="storyarc_main">StoryArcs</a>
+                            <a class="nav-link" href="history">History</a>
+                            <a class="nav-link" href="config"><i class="bi bi-gear-fill"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
 		</header>
 
 		<div id="main" class="main">
@@ -78,25 +102,17 @@
 		</div>
 
 		<footer>
-			<div id="actions">
-				<small>
-				<a href="shutdown"><span class="ui-button-icon-primary ui-icon ui-icon-power"></span>Shutdown</a> |
-				<a href="restart"><span class="ui-button-icon-primary ui-icon ui-icon-power"></span>Restart</a> |
-                                %if mylar.CONFIG.AUTHENTICATION > 0:
-                                    <a href="auth/logout"><span class="ui-button-icon-primary ui-icon ui-icon-power"></span>Logout</a></br>
-                                    <% bottom_foot = "-7px;" %>
-                                %else:
-                                    <% bottom_foot = "-25px;" %>
-                                %endif
-                                <span id="testing"><a href="#" onclick="check_the_hub()"><span class="ui-icon ui-icon-refresh"></span><span id="version_line">Check for new version</span></a></span>
-			 	</small>
-			</div>
-                        <div id="donate">
-                            %if mylar.DONATEBUTTON:
-                                <a href="config#donate"><img src="images/donate.png" height="25" width="120"></a>
-                            %endif
-                        </div>
-			<div id="version">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col">
+                        % if mylar.DONATEBUTTON:
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                <button class="btn" type="button" style="color:black;background-color:gold" href="config#donate">Donate!</button>
+                            </div>
+                        % endif
+                    </div>
+                    <div class="col">
+                        <div id="version">
                                 Version: <em>
                                 %if mylar.CURRENT_VERSION_NAME:
                                     ${mylar.CURRENT_VERSION_NAME}
@@ -104,57 +120,63 @@
                                     ${mylar.CURRENT_VERSION}
                                 %endif
                                 </em>
-				(${mylar.CONFIG.GIT_BRANCH})
-			</div>	
-                        <p class="network-status info-box"></p>
-			<div id="backendstatus">
-				Status: CV 
-                                    %if mylar.BACKENDSTATUS_CV == 'up':
-                                        <img src="images/success.png", height="8" width="8">
-                                    %else:
-                                        <img src="images/x_red.png", height="8", width="8">
-                                    %endif
+				                (${mylar.CONFIG.GIT_BRANCH})
+			            </div>
+                        <div id="backendstatus">
+                            Status: CV 
+                            %if mylar.BACKENDSTATUS_CV == 'up':
+								<i style="color:green; font-size: 1.2rem" class="bi bi-check" ></i>
+                            %else:
+								<i style="color:red; font-size: 1.2rem" class="bi bi-dash-circle-fill" ></i>
+                            %endif
                                 , WS 
-                                    %if mylar.BACKENDSTATUS_WS == 'up':
-                                        <img src="images/success.png", height="8" width="8">
-                                    %else:
-                                        <img src="images/x_red.png", height="8", width="8">
-                                    %endif
-                                <br>
-				<%
-                                    mylar.PROVIDER_STATUS = {}
-                                    for ko, vo in sorted(mylar.CONFIG.PROVIDER_ORDER.items()):
-                                        mylar.PROVIDER_STATUS.update({vo : 'success'})
-                                        for kb in mylar.PROVIDER_BLOCKLIST:
-                                            if vo == kb['site']:
-                                                mylar.PROVIDER_STATUS.update({vo : 'fail'})
-                                                break
+                            %if mylar.BACKENDSTATUS_WS == 'up':
+								<i style="color:green; font-size: 1.2rem" class="bi bi-check" ></i>
+                            %else:
+								<i style="color:red; font-size: 1.2rem" class="bi bi-dash-circle-fill" ></i>
+                            %endif
+                            <br>
+                            <%
+                                mylar.PROVIDER_STATUS = {}
+                                for ko, vo in sorted(mylar.CONFIG.PROVIDER_ORDER.items()):
+                                    mylar.PROVIDER_STATUS.update({vo : 'success'})
+                                    for kb in mylar.PROVIDER_BLOCKLIST:
+                                        if vo == kb['site']:
+                                            mylar.PROVIDER_STATUS.update({vo : 'fail'})
+                                            break
+                            %>
+                            Providers:
+                            %for prov, stats in sorted(mylar.PROVIDER_STATUS.items()):
+                                <%
+                                    if stats == 'success':
+                                        st_image = '<i style="color:green; font-size: 1.2rem" class="bi bi-check" ></i>'
+                                    else:
+                                        st_image = '<i style="color:red; font-size: 1.2rem" class="bi bi-dash-circle-fill" ></i>'
                                 %>
-                                Providers:
-                                %for prov, stats in sorted(mylar.PROVIDER_STATUS.items()):
-                                    <%
-                                        if stats == 'success':
-                                            st_image = '<img src="images/success.png" height="8" width="8">'
-                                        else:
-                                            st_image = '<img src="images/x_red.png" height="8" width="8">'
-                                    %>
-                                    ${prov}:${st_image} &nbsp
-                                %endfor
-                        </div>
-                        <div style="text-align:right;position:relative;top:${bottom_foot}">
+                                ${prov}:${st_image} &nbsp
+                            %endfor
+                        </div>	
+                    </div>
+                    <div class="col">
+                        <div class="btn-group btn-group-small" role="group">
+                            <button type="button" class="btn btn-danger" href="shutdown">Shutdown</button>
+                            <button type="button" class="btn btn-warning" href="restart">Restart</button>
+                            %if mylar.CONFIG.AUTHENTICATION > 0:
+                                <button type="button" class="btn btn-secondary" href="auth/logout">Logout</button>
+                            %endif
+                            <button href="#" onclick="check_the_hub()" type="button" class="btn btn-info" id="version_line">Check for new version</button>
+                        </div><%doc> 
+                        <div class="ms-auto">
                             <a id="notifs" title="View Latest Notifications" href="javascript:void(0)" onclick="manageNotifications()"><img src="images/notif.png" height="31" width="25" /></a>
                             <div id="notifs_dialog" title="Notifications" style="display:none">
-                               <div id="btn_container">
-                                   <div id="btn_notifs" style="float:right;padding-bottom:5px;margin-top:0px;">
-                                       <a id="menu_link_always" onclick="always_notifs()" href="#"><span id="always_the_notifs" title="Force notification display to be always on top" value="modal">Always on Top</span></a>
-                                       <a id="menu_link_edit" onclick="clear_notifs()" href="#"><span id="clear_notifs" title="Clear notifications for current session">Clear notifications</span></a>
-<!--
-                                       <a id="menu_link_edit" onclick="view_notifs()" href="#"><span id="view_notifs" title="Manage notifications">Manage notifications</span></a>
--->
-                                  </div>
-                               </div>
+                                <div id="btn_container">
+                                    <div id="btn_notifs" style="float:right;padding-bottom:5px;margin-top:0px;">
+                                        <a id="menu_link_always" onclick="always_notifs()" href="#"><span id="always_the_notifs" title="Force notification display to be always on top" value="modal">Always on Top</span></a>
+                                        <a id="menu_link_edit" onclick="clear_notifs()" href="#"><span id="clear_notifs" title="Clear notifications for current session">Clear notifications</span></a>
+                                    </div>
+                                </div>
 
-                               <div class="table_wrapper" id="notifs_wrapper">
+                            <div class="table_wrapper" id="notifs_wrapper">
                                 <table class="display_notifs" id="notifs_table">
                                     <thead>
                                         <tr>
@@ -166,64 +188,52 @@
                                     <tbody>
                                     </tbody>
                                 </table>
-                               </div>
                             </div>
-                        </div>
+                        </div> </%doc>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-light" href="#main">Back to top</button>
+                </div>
+            </div>
 		</footer>
-		<a href="#main" id="toTop"><span>Back to top</span></a>
+        <!--===STR================ TOAST ======================-->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header" id="toast-header">
+                    <strong class="toast-title me-auto"></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body"></div>
+            </div>
+        </div>
+        <!--===END================ TOAST ======================-->
+
 	</div>
 
-        <script src="js/libs/jquery-ui.min.js"></script>
-        <script src="js/common.js"></script>
+    <script src="js/libs/jquery-ui.min.js"></script>
+    <script src="js/common.js"></script>
+
 	
 	${next.javascriptIncludes()}
 	
 	<script src="js/plugins.js"></script>
 	<script src="js/script.js"></script>
-	<!--[if lt IE 7 ]>
-	<script src="js/libs/dd_belatedpng.js"></script>
-	<script> DD_belatedPNG.fix('img, .png_bg');</script>
-	<![endif]-->
-        <script>
-        //var reconnectFrequencySeconds = 1;
-        //var evtSource;
-
-        // Putting these functions in extra variables is just for the sake of readability
-        //var waitFunc = function() { return reconnectFrequencySeconds * 1000 };
-        //var tryToSetupFunc = function() {
-        //    setupEventSource();
-        //    reconnectFrequencySeconds *= 2;
-        //    if (reconnectFrequencySeconds >= 64) {
-        //       reconnectFrequencySeconds = 64;
-        //    }
-        //};
-
-        //var reconnectFunc = function() { setTimeout(tryToSetupFunc, waitFunc()) };
-
-        //function setupEventSource() {
-        //    evtSource = new EventSource("api?cmd=checkGlobalMessages&apikey=4b4cb0507c4f6ca686480a3e8e17bd07") 
-        //    evtSource.onmessage = function(e) {
-        //        console.log(e);
-        //    };
-        //    evtSource.onopen = function(e) {
-        //        reconnectFrequencySeconds = 1;
-        //    };
-        //    evtSource.onerror = function(e) {
-        //        evtSource.close();
-        //        reconnectFunc();
-        //    };
-        //}
-
-        //setupEventSource();
+    <script>
+ 
         var sse_key = "${sse_key}";
         var api_line = "api?cmd=checkGlobalMessages&apikey="+sse_key;
         const evtSource = new EventSource(api_line)
 
+        // Shuts down the server
+        // To test
         evtSource.addEventListener("shutdown", function(e){
             console.log('shutting down....');
             evtSource.close();
         }, false);
 
+        // To figure out what it does
+        // Probably need to move to BS5 Toaster
         evtSource.addEventListener("addbyid", function(e){
             if (e.data){
                 var data = JSON.parse(e.data);
@@ -255,6 +265,8 @@
             }
         }, false);
 
+        // To figure out
+        // BS5 Toaster
         evtSource.addEventListener("scheduler_message", function(e){
             if (e.data){
                 var data = JSON.parse(e.data);
@@ -269,7 +281,36 @@
             }
         }, false);
 
+        // Interesting to test out!!
+        // Probably BS5 toaster
+
         evtSource.addEventListener("check_update", function(e){
+            if (e.data){
+                var data = JSON.parse(e.data);
+                console.log('update_msg:'+data.current_version, data.latest_version, data.commits_behind, data.status, data.docker);
+                dc_behind = parseInt(data.commits_behind)
+                if (data.commits_behind < 0) {
+                    if (data.docker == 'true'){
+                        show_toast("Unknown version", "You are running an unknown version of Mylar3", "bg-danger-subtle");
+                    } else {
+                        show_toast("Unknown version", "You are running an unknown version of Mylar3.", "bg-danger-subtle");
+                    }
+                } else if (data.current_version != data.latest_version && dc_behind > 0){
+                    if (data.docker == 'true'){
+                        show_toast(dc_behind+' commits behind.', 'A <a href="https://github.com/mylar3/mylar3/compare/'+data.current_version+'...'+data.latest_version+'" target="_blank"> newer version</a> is available. You are '+dc_behind+' commits behind.', 'bg-warning-subtle')
+                    } else {
+                        show_toast('<a href="#" onclick="location.href=\'update\';" title="Update now" class="version_display">'+dc_behind+' commits behind</a>', 'A <a href="https://github.com/mylar3/mylar3/compare/'+data.current_version+'...'+data.latest_version+'" target="_blank"> newer version</a> is availble. You are '+dc_behind+' commits behind. <a href="update">Update now!</a>', 'bg-warning-subtle')
+                    }
+                } else if (data.current_version == data.latest_version && dc_behind === 0){
+                    show_toast("Mylar is up to date!", "Your Mylar installation is up to date, hooray!", "bg-success-subtle")
+                    uptodate = true;
+                } else {
+                    show_toast("Something went wrong...", "Something went wrong...", "bg-info")
+                }
+            }
+        }, false);
+        
+        evtSource.addEventListener("bleh", function(e){
             if (e.data){
                 var data = JSON.parse(e.data);
                 console.log('update_msg:'+data.current_version, data.latest_version, data.commits_behind, data.status, data.docker);
@@ -301,6 +342,7 @@
                     //up_mess = 'sup Dawg?';
                 }
 
+                // What does this do?
                 if (uptodate === true){
                     $("#testing").html('<span title="Mylar is up-to-date">'+up_linemess+'</span>');
                     $('#updatediv').html("<div id='updatebar'>Mylar is up to date</div>").fadeIn().delay(3000).fadeOut();
@@ -308,6 +350,7 @@
                     $('#updatediv').html("<div id='updatebar'>"+up_mess+"</div>").fadeIn().delay(5000).fadeOut();
                     $("#testing").html(up_linemess);
                 }
+                // What does this do?
                 var startTime = new Date().getTime();
                 var interval = setInterval(function(){
                     if (new Date().getTime() - startTime > 60000){
@@ -319,6 +362,7 @@
                 }, 2000);
             }
         }, false);
+        
 
         evtSource.addEventListener('message', function(e){
             if ('END-OF-STREAM' == e.data) {
@@ -781,6 +825,7 @@
         });
         </script>
 	<!-- This template is made by Elmar Kouwenhoven -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
 
