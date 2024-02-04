@@ -105,13 +105,6 @@
 										<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="${comic['haveissues']}" aria-valuemin="0" aria-valuemax="${comic['totalissues']}">
 											<div class="progress-bar" style="width: ${comic['percent']}%">${comic['haveissues']}/${comic['totalissues']}</div>
 										</div>
-										
-										<%doc> ${css}
-										<div style="width:${comic['percent']}%">
-											<span class="progressbar-front-text">
-												${comic['haveissues']}/${comic['totalissues']}
-											</span>
-										</div> </%doc>
 									</td>
 									<td>
 										${comic['recentstatus']}
@@ -143,14 +136,14 @@
 </%def>
 
 <%def name="javascriptIncludes()">
-		<script src="js/libs/jquery.dataTables.min.js"></script>
-		<script src="js/libs/full_numbers_no_ellipses.js"></script>
-		<script src="js/alphabetSearch.js"></script>
+	<script src="js/libs/jquery.dataTables.min.js"></script>
+	<script src="js/libs/full_numbers_no_ellipses.js"></script>
+	<script src="js/alphabetSearch.js"></script>
 	<script>
 
 	function initThisPage() {
-				$.fn.DataTable.ext.pager.numbers_length = 3;
-		 var alphaindex = "${alphaindex}"; 
+		$.fn.DataTable.ext.pager.numbers_length = 3;
+		var alphaindex = "${alphaindex}"; 
 				 if (alphaindex == "True") {
 					 var table = $('#series_table').dataTable( {
 						"destroy": true,

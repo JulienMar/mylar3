@@ -3,183 +3,199 @@
         import mylar
 %>
 
-<%def name="headerIncludes()">
-	<div id="subhead_container">
-		<div id="subhead_menu">
-			<a href="#" id="menu_link_scan" onclick="doAjaxCall('forceSearch',$(this))" data-success="Checking for wanted issues successful" data-error="Error checking wanted issues">Force Check</a>
-		</div>
-	</div>
-</%def>
-
 
 <%def name="body()">
-        <input type="hidden" id="page_name" value="upcoming" />
-	<div class="title">
-		<h1 class="clearfix"><img src="${icons['icon_wanted']}" alt="Wanted Issues"/>Wanted Issues (<span id="wanted_count"></span>)</h1>
-	</div>
 
-        <span style="vertical-align: middle;"><small>Tier-1 cutoff length: <span id="cutoff">${mylar.CONFIG.SEARCH_TIER_CUTOFF}</span> days</small></span>
-
-        <div id="checkboxControls" name="checkboxControls" style="float: right; vertical-align: middle; margin: 5px 3px 3px 3px;">
-         <div style="padding-bottom: 5px;">
-             <label for="Wanted" class="checkbox inline Wanted" id="wantedlabel" style="display:none;"><input type="checkbox" name="Wanted" id="Wanted" checked="checked" /> Wanted: <b><span id="wantedcount"></span></b></label>
-             <label for="Tier1" class="checkbox inline Tier1" id="tier1label" style="display:none;"><input type="checkbox" name="Tier1" id="Tier1" checked="checked" />Tier-1: <b><span id="tier1count"></span></b></label>
-             <label for="Tier2" class="checkbox inline Tier2" id="tier2label" style="display:none;"><input type="checkbox" name="Tier2" id="Tier2" checked="checked" />Tier-2: <b><span id="tier2count"></span></b></label>
-             <label for="Snatched" class="checkbox inline Snatched" id="snatchedlabel" style="display:none;"><input type="checkbox" name="Snatched" id="Snatched" checked="checked" /> Snatched: <b><span id="snatchedcount"></span></b></label>
-             <label for="Storyarcs" class="checkbox inline Storyarcs" id="storyarcslabel" style="display:none;"><input type="checkbox" name="Storyarcs" id="Storyarcs" checked="checked" /> StoryArcs: <b><span id="storyarcscount"></span></b></label>
-             <label for="Failed" class="checkbox inline Failed" id="failedlabel" style="display:none;"><input type="checkbox" name="Failed" id="Failed" checked="checked" /> Failed: <b><span id="failedcount"></span></b></label>
-         </div>
-        </div>
-
-        <div class="table_wrapper" id="wanted_table_wrapper">
-          <form action="mark_the_issues" method="get" id="markissues" name="markissues">
-            <div style="position:absolute;float:left;display:none;" id="markissue">Mark selected issues as
-                <select name="action" id="mark_issues" onChange="mark_the_issues()" data-success="selected issues marked">
-                                <option disabled="disabled" selected="selected">Choose...</option>
-                                <option value="Wanted">Wanted</option>
-                                <option value="Skipped">Skipped</option>
-                                <option value="Downloaded">Downloaded</option>
-                                <option value="Archived">Archived</option>
-                                <option value="Ignored">Ignored</option>
-                                <option value="OppositeTier">Opposite Tier</option>
-                </select>
-                <input type="hidden" value="Go">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col">
+                <h1><i class="bi bi-heart-fill" style="color:red"></i> Wanted issues (<span id="wanted_count"></span>)</h1>
             </div>
-
-            <small style="float: right; vertical-align: middle;">Date shown in SearchTier is when the issue was added to the Wanted list</small>
-	    <table class="display select" id="wanted_table">
-		<thead>
-			<tr>
+            <div class="col">
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary" type="button" onclick="doAjaxCallModern('forceSearch', $(this))" data-success="Checking for wanted issues successful." data-error="Error checking wanted issues.">Force check</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <span style="vertical-align: middle;"><small>Tier-1 cutoff length: <span id="cutoff">${mylar.CONFIG.SEARCH_TIER_CUTOFF}</span> days</small></span>
+            ## TODO make this more modern
+            <div id="checkboxControls" name="checkboxControls" style="float: right; vertical-align: middle; margin: 5px 3px 3px 3px;">
+                <div style="padding-bottom: 5px;">
+                    <label for="Wanted" class="checkbox inline Wanted" id="wantedlabel" style="display:none;"><input type="checkbox" name="Wanted" id="Wanted" checked="checked" /> Wanted: <b><span id="wantedcount"></span></b></label>
+                    <label for="Tier1" class="checkbox inline Tier1" id="tier1label" style="display:none;"><input type="checkbox" name="Tier1" id="Tier1" checked="checked" />Tier-1: <b><span id="tier1count"></span></b></label>
+                    <label for="Tier2" class="checkbox inline Tier2" id="tier2label" style="display:none;"><input type="checkbox" name="Tier2" id="Tier2" checked="checked" />Tier-2: <b><span id="tier2count"></span></b></label>
+                    <label for="Snatched" class="checkbox inline Snatched" id="snatchedlabel" style="display:none;"><input type="checkbox" name="Snatched" id="Snatched" checked="checked" /> Snatched: <b><span id="snatchedcount"></span></b></label>
+                    <label for="Storyarcs" class="checkbox inline Storyarcs" id="storyarcslabel" style="display:none;"><input type="checkbox" name="Storyarcs" id="Storyarcs" checked="checked" /> StoryArcs: <b><span id="storyarcscount"></span></b></label>
+                    <label for="Failed" class="checkbox inline Failed" id="failedlabel" style="display:none;"><input type="checkbox" name="Failed" id="Failed" checked="checked" /> Failed: <b><span id="failedcount"></span></b></label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="mark_the_issues" method="get" id="markissues" name="markissues">
+                    <div style="position:absolute;float:left;display:none;" id="markissue">Mark selected issues as
+                        <select name="action" id="mark_issues" onChange="mark_the_issues()" data-success="selected issues marked">
+                            <option disabled="disabled" selected="selected">Choose...</option>
+                            <option value="Wanted">Wanted</option>
+                            <option value="Skipped">Skipped</option>
+                            <option value="Downloaded">Downloaded</option>
+                            <option value="Archived">Archived</option>
+                            <option value="Ignored">Ignored</option>
+                            <option value="OppositeTier">Opposite Tier</option>
+                        </select>
+                        <input type="hidden" value="Go">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <small style="float: right; vertical-align: middle;">Date shown in SearchTier is when the issue was added to the Wanted list</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive" id="wanted_table_wrapper">
+                    ## TODO figure out display behavior
+                    <table class="table table-striped table-hover mx-auto display select" id="wanted_table">
+                        <thead>
+			                <tr>
                                 <th id="select"><input type="checkbox" name="select_all" value="1" id="wanted-select-all" class="checkbox" /></th>
-				<th id="comicname">Comic</th>
-				<th id="issuenumber">#</th>
-				<th id="reldate">Release Date</th>
-				<th id="status">Status</th>
+				                <th id="comicname">Comic</th>
+				                <th id="issuenumber">#</th>
+				                <th id="reldate">Release Date</th>
+				                <th id="status">Status</th>
                                 <th id="tier">SearchTier</th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	    </table>
-	</form>
-        </div>
-        </br>
-
-        <div class="title">
-                <h1 class="clearfix"><img src="${icons['icon_upcoming']}" alt="Upcoming Issues"/>Upcoming Issues</h1>
-        </div>
-
-        <div id="tabs">
-                <ul>
-                        <li><a href="#tabs-1">This Week's Upcoming (${upcoming_count})</a></li>
-                        <li><a href="#tabs-2">Future Auto-Wants</a></li>
-                        <li><a href="#tabs-3">Incomplete / Mismatched CV (${mismatched_count})</a></li>
-                </ul>
-
-        <div id="tabs-1">
-          <div class="table_wrapper">
-            <table class="display_no_select" id="upcoming_table">
-                %if upcoming:
-                    <thead>
-                            <tr>
-                                    <th id="comicname">Comic</th>
-                                    <th id="issuenumber">Issue</th>
-                                    <th id="reldate">Release Date</th>
-                                    <th id="status">Status</th>
-                            </tr>
-                    </thead>
-                    <tbody>
-                    %for upcome in upcoming:
-                            <tr class="gradeZ">
-                                    <td id="comicname"><a href="comicDetails?ComicID=${upcome['ComicID']}">${upcome['ComicName']}</a></td>
-                                    <td id="issuenumber">${upcome['IssueNumber']}</td>
-                                    <td id="reldate">${upcome['IssueDate']}</td>
-                                    <td id="status">${upcome['Status']}</td>
-                            </tr>
-                    %endfor
-                %else:
-                  <tr><td align="center" width="100%"> no upcoming data to display</td></tr>
-                %endif
-               </tbody>
-            </table>
-          </div>
-          <center><small>Issues listed here are not on CV yet <a href="https://github.com/mylar3/mylar3/wiki/Where-Mylar-gets-the-metadata-from" target="_new">(read more)</a></small></center>
-        </div>
-        <div id="tabs-2">
-           <a id="menu_link_edit" href="future_check">Force Check Availability</a>
-           <div style="float:right;text-align:right;font-size:20px;font-weight:bold;" title="manually add issue to auto-want list">+</div>
-           <div class="table_wrapper">
-                <table class="display_no_select" id="upcoming_nodata_table">
-                %if future_nodata_upcoming:
-                    <thead>
-                        <tr>
-                                <th id="delcolumn"></th>
-                                <th id="comicname">Comic</th>
-                                <th id="issuenumber">Issue</th>
-                                <th id="reldate">Release Date</th>
-                                <th id="status">Status</th>
-                        </tr>
-                </thead>
-                <tbody>
-                    %for f_nodata in future_nodata_upcoming:
-                            <tr class="gradeZ">
-                                    <td id="delcolumn">
-                                    <a href="upcoming#tabs-2" title="Delete series from auto-Want list" onclick="doAjaxCall('removeautowant?comicname=${f_nodata['ComicName'] |u}&release=${f_nodata['IssueDate']}',$(this),'table')" data-success="${f_nodata['ComicName']} has been removed from the auto-want list"><img src="images/skipped_icon.png" height="25" width="25" class="highqual" /></a>
-                                    </td>
-                                    %if f_nodata['ComicID'] is not None:
-                                        <td id="comicname"><a href="comicDetails?ComicID=${f_nodata['ComicID']}">${f_nodata['ComicName']}</a></td>
-                                    %else:
-                                        <td id="comicname">${f_nodata['ComicName']}</td>
-                                    %endif
-                                    <td id="issuenumber">${f_nodata['IssueNumber']}</td>
-                                    <td id="reldate">${f_nodata['IssueDate']}</td>
-                                    <td id="status">${f_nodata['Status']}</td>
-                            </tr>
-                    %endfor
-                %else:
-                  <div align="center">No items currently being watched</div>
-                %endif
-               </tbody>
-               </table>
+			                </tr>
+		                </thead>
+		                <tbody>
+		                </tbody>
+	                </table>
+                </div>
             </div>
         </div>
-        <div id="tabs-3">
-          <div class="table_wrapper">
-            <table class="display_no_select" id="mismatched_table">
-                %if mismatched:
-                    <thead>
-                            <tr>
-                                    <th id="comicname">Comic</th>
-                                    <th id="issuenumber">Issue</th>
-                                    <th id="misinfo">Reason for Mismatch (CV - Pull)</th>
-                                    <th id="weekinfo">Pull-list</th>
-                            </tr>
-                    </thead>
-                    <tbody>
-                    %for mis in mismatched:
-                            <%
-                               if mis['status'] == 'Mismatched':
-                                   grade = "Z"
-                               else:
-                                   grade = "Y"
-                            %>
-                            <tr class="grade${grade}">
-                                    <td id="comicname"><a href="comicDetails?ComicID=${mis['comicid']}">${mis['comicname']}</a></td>
-                                    <td id="issuenumber">${mis['issuenumber']}</td>
-                                    <td id="misinfo">${mis['mismatch_type']}</td>
-                                    <td id="weekinfo"><a href="pullist?week=${mis['pullweek']}&year=${mis['pullyear']}#${mis['comicname']}_${mis['issuenumber']}">${mis['pullyear']}-${mis['pullweek']}</a></td>
-                            </tr>
-                    %endfor
-                    </tbody>
-                %else:
-                  <tr><td align="center" width="100%">No mismatched data</td></tr>
-                %endif
-            </table>
-          </div>
-          <center><small>Mismatches can possibly indicate: the dates are incorrect btwn CV & Mylar, an incorrect volume, or an incorrect booktype</br>
-          A <b>Recreate Pullist</b> for the given week (click in column) may correct stale dates</small></center>
+        <div class="row">
+            <div class="col">
+                <h1><i class="bi bi-calendar-event"></i> Upcoming issues</h1>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming-tab-pane" type="button" role="tab" aria-controls="upcoming-tab-pane" aria-selected="true">This week's upcoming</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="future-auto-wants-tab" data-bs-toggle="tab" data-bs-target="#future-auto-wants-tab-pane" type="button" role="tab" aria-controls="future-auto-wants-tab-pane" aria-selected="false">Future Auto Wants</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="incomplete-tab" data-bs-toggle="tab" data-bs-target="#incomplete-tab-pane" type="button" role="tab" aria-controls="incomplete-tab-pane" aria-selected="false">Incomplete/Mismatched CV</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="upcoming-tab-pane" role="tabpanel" aria-labelledby="upcoming-tab" tabindex="0">
+                        <div class="table_wrapper">
+                            <table class="display_no_select" id="upcoming_table">
+                                %if upcoming:
+                                    <thead>
+                                        <tr>
+                                            <th id="comicname">Comic</th>
+                                            <th id="issuenumber">Issue</th>
+                                            <th id="reldate">Release Date</th>
+                                            <th id="status">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    %for upcome in upcoming:
+                                        <tr class="gradeZ">
+                                            <td id="comicname"><a href="comicDetails?ComicID=${upcome['ComicID']}">${upcome['ComicName']}</a></td>
+                                            <td id="issuenumber">${upcome['IssueNumber']}</td>
+                                            <td id="reldate">${upcome['IssueDate']}</td>
+                                            <td id="status">${upcome['Status']}</td>
+                                        </tr>
+                                    %endfor
+                                %else:
+                                    <tr><td align="center" width="100%"> no upcoming data to display</td></tr>
+                                %endif
+                                </tbody>
+                            </table>
+                            <center><small>Issues listed here are not on CV yet <a href="https://github.com/mylar3/mylar3/wiki/Where-Mylar-gets-the-metadata-from" target="_new">(read more)</a></small></center>
+                        </div>
+                    <div class="tab-pane fade" id="future-auto-wants-tab-pane" role="tabpanel" aria-labelledby="future-auto-wants-tab" tabindex="0">
+                        <a id="menu_link_edit" href="future_check">Force Check Availability</a>
+                        <div style="float:right;text-align:right;font-size:20px;font-weight:bold;" title="manually add issue to auto-want list">+</div>
+                        <div class="table_wrapper">
+                            <table class="display_no_select" id="upcoming_nodata_table">
+                                %if future_nodata_upcoming:
+                                    <thead>
+                                        <tr>
+                                            <th id="delcolumn"></th>
+                                            <th id="comicname">Comic</th>
+                                            <th id="issuenumber">Issue</th>
+                                            <th id="reldate">Release Date</th>
+                                            <th id="status">Status</th>
+                                        </tr>
+                                    </thead>
+                                   <tbody>
+                                        %for f_nodata in future_nodata_upcoming:
+                                            <tr class="gradeZ">
+                                                <td id="delcolumn">
+                                                    <a href="upcoming#tabs-2" title="Delete series from auto-Want list" onclick="doAjaxCall('removeautowant?comicname=${f_nodata['ComicName'] |u}&release=${f_nodata['IssueDate']}',$(this),'table')" data-success="${f_nodata['ComicName']} has been removed from the auto-want list"><img src="images/skipped_icon.png" height="25" width="25" class="highqual" /></a>
+                                                </td>
+                                                %if f_nodata['ComicID'] is not None:
+                                                    <td id="comicname"><a href="comicDetails?ComicID=${f_nodata['ComicID']}">${f_nodata['ComicName']}</a></td>
+                                                %else:
+                                                    <td id="comicname">${f_nodata['ComicName']}</td>
+                                                %endif
+                                                <td id="issuenumber">${f_nodata['IssueNumber']}</td>
+                                                <td id="reldate">${f_nodata['IssueDate']}</td>
+                                                <td id="status">${f_nodata['Status']}</td>
+                                            </tr>
+                                    %endfor
+                                %else:
+                                    <div align="center">No items currently being watched</div>
+                                %endif
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="incomplete-tab-pane" role="tabpanel" aria-labelledby="incomplete-tab" tabindex="0">
+                        <div class="table_wrapper">
+                            <table class="display_no_select" id="mismatched_table">
+                                %if mismatched:
+                                    <thead>
+                                        <tr>
+                                            <th id="comicname">Comic</th>
+                                            <th id="issuenumber">Issue</th>
+                                            <th id="misinfo">Reason for Mismatch (CV - Pull)</th>
+                                            <th id="weekinfo">Pull-list</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        %for mis in mismatched:
+                                            <%
+                                                if mis['status'] == 'Mismatched':
+                                                    grade = "Z"
+                                                else:
+                                                    grade = "Y"
+                                            %>
+                                            <tr class="grade${grade}">
+                                                <td id="comicname"><a href="comicDetails?ComicID=${mis['comicid']}">${mis['comicname']}</a></td>
+                                                <td id="issuenumber">${mis['issuenumber']}</td>
+                                                <td id="misinfo">${mis['mismatch_type']}</td>
+                                                <td id="weekinfo"><a href="pullist?week=${mis['pullweek']}&year=${mis['pullyear']}#${mis['comicname']}_${mis['issuenumber']}">${mis['pullyear']}-${mis['pullweek']}</a></td>
+                                            </tr>
+                                        %endfor
+                                    </tbody>
+                                %else:
+                                    <tr><td align="center" width="100%">No mismatched data</td></tr>
+                                %endif
+                            </table>
+                        </div>
+                        <center><small>Mismatches can possibly indicate: the dates are incorrect btwn CV & Mylar, an incorrect volume, or an incorrect booktype</br>
+                        A <b>Recreate Pullist</b> for the given week (click in column) may correct stale dates</small></center>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
 </%def>
 
 <%def name="headIncludes()">

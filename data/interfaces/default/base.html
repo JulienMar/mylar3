@@ -197,6 +197,7 @@
                 </div>
             </div>
 		</footer>
+        
         <!--===STR================ TOAST ======================-->
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
             <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -209,6 +210,7 @@
         </div>
         <!--===END================ TOAST ======================-->
 
+
 	</div>
 
     <script src="js/libs/jquery-ui.min.js"></script>
@@ -219,6 +221,7 @@
 	
 	<script src="js/plugins.js"></script>
 	<script src="js/script.js"></script>
+    	<script src="js/script-modern.js"></script>
     <script>
  
         var sse_key = "${sse_key}";
@@ -286,6 +289,7 @@
 
         evtSource.addEventListener("check_update", function(e){
             if (e.data){
+                show_toast_test()
                 var data = JSON.parse(e.data);
                 console.log('update_msg:'+data.current_version, data.latest_version, data.commits_behind, data.status, data.docker);
                 dc_behind = parseInt(data.commits_behind)
