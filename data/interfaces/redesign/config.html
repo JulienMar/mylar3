@@ -1,0 +1,391 @@
+<%inherit file="base.html" />
+
+<%!
+	import mylar
+        from operator import itemgetter
+%>
+
+<%def name="headerIncludes()"></%def>
+
+<%def name="body()">
+    <input type="hidden" id="page_name" value="config" />
+
+    <%
+        mylar.DONATEBUTTON = False
+    %>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>
+                    <i class="bi bi-gear-fill"></i> Settings
+                </h1>
+            </div>
+            <div class="col">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" href="carepackage">Care Package</button>
+                    <button type="button" class="btn btn-primary" href="shutdown">Shutdown</button>
+                    <button type="button" class="btn btn-primary" href="restart">Restart</button>
+                    ## TODO modal for blocked providers
+                    <button type="button" class="btn btn-primary">Provider blocklist</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-tabs" id="configTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Information</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="web-interface-tab" data-bs-toggle="tab" data-bs-target="#web-interface-tab-pane" type="button" role="tab" aria-controls="web-interface-tab-pane" aria-selected="false">Web Interface</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Download settings</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Search providers</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Quality & Post processing</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Advanced settings</button>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="information-tab-pane" role="tabpanel" aria-labelledby="information-tab" tabindex="0">
+                        <div class="row gx-5">
+                            <div class="col">
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">
+                                            Version
+                                        </legend>
+                                        <div class="center-text">
+                                            %if config['br_version_name'] and config['br_release_name']:
+                                                <span style="font-weight:bold;">[${config['br_version_name']}]</span><br/>
+                                                <span style="font-style:italic;">${config['br_release_name']}</span>
+                                            %elif config['br_version_name']:
+                                                <span style="font-weight:bold;">[${config['br_version_name']}]</span>
+                                            %else:
+                                                <div style="font-weight:bold;">[${config['br_version']}]</div>
+                                                %endif
+                                        </div>
+                                        <span style="float:left;" title="${config['br_type']} installation detected.">${config['br_type']}</span>
+                                        <span style="float:right;">${config['branch']}</span>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">
+                                            Warnings / Important release information
+                                        </legend>
+                                        <label><strong>PIP requirements: </strong></label><span id="pip_reqcheck"></span><br/>
+                                        <label><strong>Unrar requirement: </strong></label><span id="rar_reqcheck"></span><br/>
+                                        <span id="config_messages"><label><strong>Configuration warnings: </strong></label><span id="config_reqcheck"></span></span><br/>
+                                        <span id="release_messages"><label><strong>Messages: </strong></label><span id="releasemsg_check"></span></span>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">Mylar program options</legend>
+                                        <span id="py_check" class="py_checker"></span>
+                                        <span id="py_vers"><label><strong>Python Version :</strong> ${config['py_version']}</label></span></br>
+                                        <label><strong>Language :</strong> ${config['lang']}</label></br></br>
+                                        <label><strong>Mylar Data Directory :</strong>  ${config['data_dir']}</label></br>
+                                        <label><strong>Mylar Program Directory :</strong> ${config['prog_dir']}</label></br>
+                                        <label><strong>Mylar Cache Directory :</strong> ${config['cache_dir']}</label></br>
+                                        <a href="config_dump"><label><strong>Mylar Config File :</strong>${config['config_file']}</label></a></br>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">
+                                            Donations
+                                        </legend>
+                                        <a name="donate"></a>
+                                        <div class="center-text">
+                                            <label><strong>Mylar is free to use,</br>
+                                            but you can contribute and support the development</br>
+                                            by buying me a coffee (or several)</strong></label></br></br>
+                                            <%
+                                                pline = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=EWQADB5AMVRFU"
+                                                bline = 'data:text/html;charset=utf-8, <html><meta http-equiv="refresh" content="0;URL=&#39;${pline}&#39;"></html>'
+                                            %>
+                                            <a id="navDonate" rel="noreferrer" onclick="window.open('${pline}');return false" href='${bline}'><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="[donate]" /></a>
+                                            ## <a href="#" onclick="javascript:window.prompt('Please copy/paste my Bitcoin address into your Bitcoin client.', '18eCE9wZxnNiZgE4Cc5pwJMnMjEfhdmH4U');"><img src="images/bitcoin.png" alt="Bitcoin"align="center"></a>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">Bragging Rights</legend>
+                                        <strong># of Series you're watching: </strong> ${comicinfo['COUNT_COMICS']}<br/>
+                                        <strong># of Series you're watching that are continuing: </strong> ${comicinfo['CCONTCOUNT']}<br/>
+                                        <strong># of Issues you're watching: </strong> ${comicinfo['COUNT_ISSUES']}<br/>
+                                        <strong># of Issues you actually have: </strong> ${comicinfo['COUNT_HAVES']}<br/>
+                                        <strong> ... total HD-space being used: </strong> ${comicinfo['COUNT_SIZE']}<br/>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                   <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">Need help?</legend>
+                                        <figure style="float:left">
+                                            <i class="bi bi-chat-right-dots-fill figure-img" style="font-size: 2.5em;"></i>
+                                            <figcaption class="figure-caption">Forums</figcaption>
+                                        </figure>
+                                        <figure style="float:left">
+                                            <i class="bi bi-github figure-img" style="font-size: 2.5em"></i>
+                                            <figcaption class="figure-caption">Github</figcaption>
+                                        </figure>
+                                        <figure style="float:left">
+                                            <i class="bi bi-discord figure-img" style="font-size: 2.5em"></i>
+                                            <figcaption class="figure-caption">Discord</figcaption>
+                                        </figure>
+                                        <figure style="float:left">
+                                            <i class="bi bi-hash figure-img" style="font-size: 2.5em"></i>
+                                            <figcaption class="figure-caption">IRC</figcaption>
+                                        </figure>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">Branch history</legend>
+                                            <div>${config['branch_history']}</div>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                    <fieldset class="border rounded-3 p-3">
+                                        <legend class="float-none w-auto px-3">Provider Usage (${config['dltotals']})</legend>
+                                        <div class="row">
+                                            <label style="font-size:16px;font-weight:bold;">Provider Usage (${config['dltotals']})</label>
+                                            <a href="#" onclick="show_stats();"><span style="vertical-align:bottom;text-align:center;float:right;">Show Stats</span></a>
+                                        </div>
+                                        <div id="stats" style="display:none">
+                                        </br>
+                                        %for dl in config['dlstats']:
+                                            <%
+                                                dlline = '%s: %s snatches' % (dl[0], dl[1])
+                                                if dl[0] == 'newznab':
+                                                    dlline += '<small>  (*erroneous collection data)</small>'
+                                            %>
+                                            ${dlline}</br>
+                                        %endfor
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="web-interface-tab-pane" role="tabpanel" aria-labelledby="web-interface-tab" tabindex="0">
+                        <div class="row gx-5">
+                            <div class="col">
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        Basic
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="hostInput" class="col col-form-label">Host</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="hostInput">
+                                            <div id="hostHelpBlock" class="form-text">
+                                                e.g. localhost or 0.0.0.0
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="portInput" class="col col-form-label">Port</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="portInput">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="httpsCheck" class="col col-form-label">Use HTTPS</label>
+                                        <div class="col">
+                                            <input class="form-check-input" type="checkbox" value="" id="httpsCheck">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="authenticationSelect" class="col col-form-label">Authentication</label>
+                                        <div class="col">
+                                            <select class="form-select" id="authenticationSelect">
+                                                <option selected>None</option>
+                                                <option>Basic (Browser Pop-up)</option>
+                                                <option>Forms (Login Page)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="usernameInput" class="col col-form-label">HTTP Username</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="usernameInput" placeholder="None">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="passwordInput" class="col col-form-label">HTTP Password</label>
+                                        <div class="col">
+                                            <input type="password" class="form-control" id="passwordInput">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="startupCheck" class="col col-form-label">Launch Browser on Startup</label>
+                                        <div class="col">
+                                            <input class="form-check-input" type="checkbox" value="" id="startupCheck">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="backupCheck" class="col col-form-label">Backup Database on Startup</label>
+                                        <div class="col">
+                                            <input class="form-check-input" type="checkbox" value="" id="backupCheck">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="synologyCheck" class="col col-form-label">Synology Fix</label>
+                                        <div class="col">
+                                            <input class="form-check-input" type="checkbox" value="" id="synologyCheck">
+                                            <div id="hostHelpBlock" class="form-text">
+                                                *Use this if experiencing parsing problems*
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        Interface
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="interfaceSelect" class="col col-form-label">Interface</label>
+                                        <div class="col">
+                                            <select class="form-select" id="interfaceSelect">
+                                                <option selected>default</option>
+                                                <option>carbon</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        Annual Handling
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="annualCheck" class="col col-form-label">Enable Series-Annual Integration</label>
+                                        <div class="col">
+                                            <input class="form-check-input" type="checkbox" value="" id="annualCheck">
+                                        </div>
+                                        Annuals will be tracked independently (will appear on your watchlist as individual series)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col">
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        API
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="comicvineInput" class="col col-form-label">ComicVine API Key</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="comicvineInput">
+                                            <div id="comicvineHelpBlock" class="form-text">
+                                                Specify your own CV API key here
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="enableAPICheck" class="col col-form-label">Enable API</label>
+                                        <div class="col">
+                                            <input type="checkbox" value="" class="form-check-input" id="enableAPICheck">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        OPDS
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="enableOPDSCheck" class="col col-form-label">Enable OPDS</label>
+                                        <div class="col">
+                                            <input type="checkbox" value="" class="form-check-input" id="enableOPDSCheck">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="col">
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        Interval
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="nzbSearchIntervalInput" class="col col-form-label">NZB Search Interval</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="nzbSearchIntervalInput"> mins
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="nzbSearchStartupCheck" class="col col-form-label">NZB Search on startup</label>
+                                        <div class="col">
+                                            <input type="checkbox" value="" class="form-check-input" id="nzbSearchStartupCheck">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="nzbSearchDelayInput" class="col col-form-label">Search delay</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="nzbSearchDelayInput"> mins
+                                            <div id="comicvineHelpBlock" class="form-text">
+                                                The amount of time to wait between each search request (minimum is 1 min)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        Comic Location
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <div class="alert alert-primary" role="alert">
+                                            Automatic folder creation happens BENEATH this path
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="comicLocationPicker" class="col col-form-label">Comic Location Path</label>
+                                        <div class="col">
+                                              <input class="form-control" type="file" id="comicLocationPicker">
+                                        </div>
+                                        <div id="comicLocationPickerHelpBlock" class="form-text">
+                                            Where do you store your comics? (or where do you want me to store them) 
+                                            e.g. /Users/name/Comics or /Volumes/share/comics
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border rounded-3 p-3">
+                                    <legend class="float-none w-auto px-3">
+                                        Permissions
+                                    </legend>
+                                    <div class="mb-3 row">
+                                        <label for="enforcePermissionsCheck" class="col col-form-label">Enforce Permissions</label>
+                                        <div class="col">
+                                            <input type="checkbox" value="" class="form-check-input" id="enforcePermissionsCheck">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+                    <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</%def>
+
+<%def name="headIncludes()">
+    <link rel="stylesheet" href="interfaces/redesign/css/config.css">
+</%def>
+<%def name="javascriptIncludes()"></%def>
+
+
+
