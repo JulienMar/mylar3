@@ -77,13 +77,14 @@ from mylar.auth import (
 
 def serve_template(templatename, **kwargs):
     interface_dir = os.path.join(str(mylar.PROG_DIR), 'data/interfaces/')
-    if any([mylar.CONFIG.INTERFACE == 'default', mylar.CONFIG.INTERFACE is None]):
-        tmper_dir = 'default'
-    else:
-        tmper_dir = mylar.CONFIG.INTERFACE
+    # if any([mylar.CONFIG.INTERFACE == 'default', mylar.CONFIG.INTERFACE is None]):
+        # tmper_dir = 'default'
+    # else:
+        # tmper_dir = mylar.CONFIG.INTERFACE
 
+    tmper_dir = 'redesign'
     icons = []
-    if mylar.CONFIG.INTERFACE == 'default':
+    """ if mylar.CONFIG.INTERFACE == 'default':
         icons = {'icon_gear': os.path.join(mylar.CONFIG.HTTP_ROOT, 'images', 'icon_gear.png'),
                  'icon_upcoming': os.path.join(mylar.CONFIG.HTTP_ROOT, 'images', 'icon_upcoming.png'),
                  'icon_wanted': os.path.join(mylar.CONFIG.HTTP_ROOT, 'images', 'icon_wanted.png'),
@@ -114,14 +115,14 @@ def serve_template(templatename, **kwargs):
                  'prowl_logo': os.path.join(mylar.CONFIG.HTTP_ROOT, 'interfaces', 'carbon', 'images', 'prowl_logo.png'),
                  'ReadingList-icon': os.path.join(mylar.CONFIG.HTTP_ROOT, 'interfaces', 'carbon', 'images', 'ReadingList-icon.png'),
                  'next': os.path.join(mylar.CONFIG.HTTP_ROOT, 'interfaces', 'carbon', 'images', 'next.gif'),
-                 'prev': os.path.join(mylar.CONFIG.HTTP_ROOT, 'interfaces', 'carbon', 'images', 'prev.gif')}
+                 'prev': os.path.join(mylar.CONFIG.HTTP_ROOT, 'interfaces', 'carbon', 'images', 'prev.gif')} """
 
     template_dir = os.path.join(str(interface_dir), tmper_dir)
     _hplookup = TemplateLookup(directories=[template_dir])
-    try:
-        template = _hplookup.get_template(templatename)
-        return template.render(http_root=mylar.CONFIG.HTTP_ROOT, interface=mylar.CONFIG.INTERFACE, icons=icons, gl_messages=mylar.GLOBAL_MESSAGES, sse_key=mylar.SSE_KEY, pre_update=mylar.UPDATE_VALUE, **kwargs)
-    except Exception as e:
+    # try:
+    template = _hplookup.get_template(templatename)
+    return template.render(http_root=mylar.CONFIG.HTTP_ROOT, interface=mylar.CONFIG.INTERFACE, icons=icons, gl_messages=mylar.GLOBAL_MESSAGES, sse_key=mylar.SSE_KEY, pre_update=mylar.UPDATE_VALUE, **kwargs)
+"""     except Exception as e:
         #default to base in case the html hasn't been changed in new interface.
         template_dir = os.path.join(str(interface_dir), 'default')
         _hplookup = TemplateLookup(directories=[template_dir])
@@ -129,7 +130,7 @@ def serve_template(templatename, **kwargs):
             template = _hplookup.get_template(templatename)
             return template.render(http_root=mylar.CONFIG.HTTP_ROOT, interface=mylar.CONFIG.INTERFACE, icons=icons, gl_messages=mylar.GLOBAL_MESSAGES, sse_key=mylar.SSE_KEY, pre_update=mylar.UPDATE_VALUE, **kwargs)
         except Exception:
-            return exceptions.html_error_template().render()
+            return exceptions.html_error_template().render() """
 
 
 class WebMaintenance(object):
